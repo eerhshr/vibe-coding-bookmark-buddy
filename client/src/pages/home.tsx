@@ -30,7 +30,9 @@ export default function Home() {
         {showDashboard && analysisData && (
           <>
             <DashboardSection data={analysisData} />
-            <BookmarkTable />
+            <div id="bookmarks-section">
+              <BookmarkTable />
+            </div>
           </>
         )}
       </main>

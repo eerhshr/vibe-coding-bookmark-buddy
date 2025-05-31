@@ -53,6 +53,28 @@ export default function BookmarkTable({}: BookmarkTableProps) {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  // Listen for category filter events
+  useEffect(() => {
+    const handleCategoryFilter = (event: CustomEvent) => {
+      const categoryName = event.detail;
+      setSelectedCategory(categoryName);
+      setCurrentPage(1);
+      
+      // Scroll to bookmarks section
+      setTimeout(() => {
+        const bookmarksSection = document.getElementById('bookmarks-section');
+        if (bookmarksSection) {
+          bookmarksSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    };
+
+    window.addEventListener('filter-category', handleCategoryFilter as EventListener);
+    return () => {
+      window.removeEventListener('filter-category', handleCategoryFilter as EventListener);
+    };
+  }, []);
+
   const { data: categoriesData } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
   });
@@ -142,19 +164,30 @@ export default function BookmarkTable({}: BookmarkTableProps) {
                 />
               </div>
               
-              <Select value={selectedCategory || 'all'} onValueChange={handleCategoryChange}>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categoriesData?.map((category) => (
-                    <SelectItem key={category.id} value={category.name}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="flex space-x-2">
+                <Select value={selectedCategory || 'all'} onValueChange={handleCategoryChange}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {categoriesData?.map((category) => (
+                      <SelectItem key={category.id} value={category.name}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {selectedCategory && (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setSelectedCategory('')}
+                  >
+                    Clear Filter
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </CardHeader>

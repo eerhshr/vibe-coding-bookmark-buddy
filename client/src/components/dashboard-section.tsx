@@ -155,7 +155,7 @@ export default function DashboardSection({ data }: DashboardSectionProps) {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 gap-8 mb-8">
         <Card>
           <CardHeader>
             <CardTitle>Bookmark Categories</CardTitle>
@@ -166,79 +166,42 @@ export default function DashboardSection({ data }: DashboardSectionProps) {
             </div>
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Most Bookmarked Sites</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64">
-              <canvas ref={domainChartRef}></canvas>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
-      {/* Category Breakdown & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Category Breakdown</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {data.categories.map((category) => (
-                  <div key={category.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div 
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: category.color }}
-                      />
-                      <span className="font-medium text-gray-900">{category.name}</span>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <span className="text-sm text-gray-600">{category.count} bookmarks</span>
-                      <div className="w-20">
-                        <Progress 
-                          value={getProgressPercentage(category.count, data.stats.totalBookmarks)}
-                          className="h-2"
-                        />
-                      </div>
-                    </div>
+      {/* Category Breakdown */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Category Breakdown - Click to View Bookmarks</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {data.categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => window.dispatchEvent(new CustomEvent('filter-category', { detail: category.name }))}
+                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-primary/20"
+              >
+                <div className="flex items-center space-x-3">
+                  <div 
+                    className="w-4 h-4 rounded-full"
+                    style={{ backgroundColor: category.color }}
+                  />
+                  <span className="font-medium text-gray-900">{category.name}</span>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-gray-600">{category.count} bookmarks</span>
+                  <div className="w-24">
+                    <Progress 
+                      value={getProgressPercentage(category.count, data.stats.totalBookmarks)}
+                      className="h-2"
+                    />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <Button variant="ghost" className="w-full justify-start">
-                <Download className="w-4 h-4 mr-3 text-primary" />
-                Export Organized
-              </Button>
-              <Button variant="ghost" className="w-full justify-start">
-                <Search className="w-4 h-4 mr-3 text-orange-500" />
-                Find Duplicates
-              </Button>
-              <Button variant="ghost" className="w-full justify-start">
-                <Trash2 className="w-4 h-4 mr-3 text-green-500" />
-                Cleanup Broken Links
-              </Button>
-              <Button variant="ghost" className="w-full justify-start">
-                <FileText className="w-4 h-4 mr-3 text-gray-600" />
-                Generate Report
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </section>
   );
 }
