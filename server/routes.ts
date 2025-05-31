@@ -143,11 +143,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         categoryStats.set(bookmark.category || 'Other', count + 1);
       });
 
-      for (const [name, count] of categoryStats.entries()) {
+      for (const [name, count] of Array.from(categoryStats.entries())) {
         await storage.createCategory({
           name,
           count,
-          color: categoryColors[name] || categoryColors.Other
+          color: categoryColors[name as keyof typeof categoryColors] || categoryColors.Other
         });
       }
 

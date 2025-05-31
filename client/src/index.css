@@ -53,7 +53,8 @@
   }
 
   body {
-    @apply font-roboto antialiased bg-background text-foreground;
+    @apply antialiased bg-background text-foreground;
+    font-family: 'Roboto', sans-serif;
   }
 }
 

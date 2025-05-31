@@ -54,7 +54,13 @@ export class MemStorage implements IStorage {
 
   async createBookmark(insertBookmark: InsertBookmark): Promise<Bookmark> {
     const id = this.currentBookmarkId++;
-    const bookmark: Bookmark = { ...insertBookmark, id };
+    const bookmark: Bookmark = { 
+      ...insertBookmark, 
+      id,
+      category: insertBookmark.category || null,
+      folder: insertBookmark.folder || null,
+      favicon: insertBookmark.favicon || null
+    };
     this.bookmarks.set(id, bookmark);
     return bookmark;
   }
@@ -86,7 +92,11 @@ export class MemStorage implements IStorage {
 
   async createCategory(insertCategory: InsertCategory): Promise<Category> {
     const id = this.currentCategoryId++;
-    const category: Category = { ...insertCategory, id };
+    const category: Category = { 
+      ...insertCategory, 
+      id,
+      count: insertCategory.count ?? 0
+    };
     this.categories.set(id, category);
     return category;
   }
