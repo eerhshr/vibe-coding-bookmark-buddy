@@ -33,6 +33,10 @@ export interface IStorage {
   // Bulk operations
   createBookmarksBulk(bookmarks: InsertBookmark[]): Promise<Bookmark[]>;
   getAnalysisData(): Promise<AnalysisData>;
+  
+  // Delete and update operations
+  deleteBookmark(id: number): Promise<void>;
+  updateBookmark(id: number, updates: Partial<Bookmark>): Promise<Bookmark>;
 }
 
 export class MemStorage implements IStorage {
@@ -165,6 +169,21 @@ export class MemStorage implements IStorage {
       topDomains,
       bookmarks
     };
+  }
+
+  async deleteBookmark(id: number): Promise<void> {
+    this.bookmarks.delete(id);
+  }
+
+  async updateBookmark(id: number, updates: Partial<Bookmark>): Promise<Bookmark> {
+    const bookmark = this.bookmarks.get(id);
+    if (!bookmark) {
+      throw new Error('Bookmark not found');
+    }
+    
+    const updatedBookmark = { ...bookmark, ...updates };
+    this.bookmarks.set(id, updatedBookmark);
+    return updatedBookmark;
   }
 }
 

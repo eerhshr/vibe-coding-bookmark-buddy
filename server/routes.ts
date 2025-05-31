@@ -57,6 +57,87 @@ function classifyBookmark(title: string, url: string, folder?: string): string {
   return 'Other';
 }
 
+function generateBookmarkHTML(bookmarks: any[]): string {
+  const categorizedBookmarks = new Map<string, any[]>();
+  
+  bookmarks.forEach(bookmark => {
+    const category = bookmark.category || 'Other';
+    if (!categorizedBookmarks.has(category)) {
+      categorizedBookmarks.set(category, []);
+    }
+    categorizedBookmarks.get(category)!.push(bookmark);
+  });
+
+  let html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Organized Bookmarks</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Organized Bookmarks</h1>
+`;
+
+  for (const [category, bookmarkList] of categorizedBookmarks.entries()) {
+    html += `    <h2>${category}</h2>\n    <dl>\n`;
+    bookmarkList.forEach(bookmark => {
+      html += `        <dt><a href="${bookmark.url}">${bookmark.title}</a></dt>\n`;
+    });
+    html += `    </dl>\n`;
+  }
+
+  html += `</body>
+</html>`;
+  return html;
+}
+
+function generateReportHTML(analysisData: any): string {
+  return `<!DOCTYPE html>
+<html>
+<head>
+    <title>Bookmark Analysis Report</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
+        .stat-card { background: #f5f5f5; padding: 20px; border-radius: 8px; }
+        .category-list { list-style: none; padding: 0; }
+        .category-item { display: flex; justify-content: space-between; padding: 10px; background: #fff; margin: 5px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Bookmark Analysis Report</h1>
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Total Bookmarks</h3>
+            <p style="font-size: 2em; margin: 0;">${analysisData.stats.totalBookmarks}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Categories</h3>
+            <p style="font-size: 2em; margin: 0;">${analysisData.stats.categories}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Unique Domains</h3>
+            <p style="font-size: 2em; margin: 0;">${analysisData.stats.domains}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Duplicates</h3>
+            <p style="font-size: 2em; margin: 0;">${analysisData.stats.duplicates}</p>
+        </div>
+    </div>
+    <h2>Category Breakdown</h2>
+    <ul class="category-list">
+        ${analysisData.categories.map((cat: any) => `
+            <li class="category-item">
+                <span>${cat.name}</span>
+                <span>${cat.count} bookmarks</span>
+            </li>
+        `).join('')}
+    </ul>
+</body>
+</html>`;
+}
+
 function extractDomain(url: string): string {
   try {
     const domain = new URL(url).hostname;
@@ -237,6 +318,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Categories error:', error);
       res.status(500).json({ message: 'Failed to get categories' });
+    }
+  });
+
+  // Delete bookmark
+  app.delete('/api/bookmarks/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteBookmark(parseInt(id));
+      res.json({ success: true, message: 'Bookmark deleted successfully' });
+    } catch (error) {
+      console.error('Delete bookmark error:', error);
+      res.status(500).json({ message: 'Failed to delete bookmark' });
+    }
+  });
+
+  // Update bookmark
+  app.patch('/api/bookmarks/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+      const updatedBookmark = await storage.updateBookmark(parseInt(id), updates);
+      res.json(updatedBookmark);
+    } catch (error) {
+      console.error('Update bookmark error:', error);
+      res.status(500).json({ message: 'Failed to update bookmark' });
+    }
+  });
+
+  // Export bookmarks
+  app.get('/api/export/bookmarks', async (req, res) => {
+    try {
+      const bookmarks = await storage.getBookmarks();
+      const htmlContent = generateBookmarkHTML(bookmarks);
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Content-Disposition', 'attachment; filename="organized_bookmarks.html"');
+      res.send(htmlContent);
+    } catch (error) {
+      console.error('Export error:', error);
+      res.status(500).json({ message: 'Failed to export bookmarks' });
+    }
+  });
+
+  // Export report
+  app.get('/api/export/report', async (req, res) => {
+    try {
+      const analysisData = await storage.getAnalysisData();
+      const reportContent = generateReportHTML(analysisData);
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Content-Disposition', 'attachment; filename="bookmark_analysis_report.html"');
+      res.send(reportContent);
+    } catch (error) {
+      console.error('Export report error:', error);
+      res.status(500).json({ message: 'Failed to export report' });
     }
   });
 

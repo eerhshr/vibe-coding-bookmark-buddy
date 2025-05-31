@@ -79,13 +79,20 @@ export default function BookmarkTable({}: BookmarkTableProps) {
     queryKey: ['/api/categories'],
   });
 
-  const { data: bookmarkData, isLoading } = useQuery<BookmarkResponse>({
-    queryKey: ['/api/bookmarks', { 
-      search: debouncedSearch, 
-      category: selectedCategory, 
-      page: currentPage,
-      limit: 10
-    }],
+  const { data: bookmarkData, isLoading, refetch } = useQuery<BookmarkResponse>({
+    queryKey: ['/api/bookmarks'],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: '50'
+      });
+      
+      if (debouncedSearch) params.append('search', debouncedSearch);
+      if (selectedCategory) params.append('category', selectedCategory);
+      
+      const response = await fetch(`/api/bookmarks?${params}`);
+      return response.json();
+    },
   });
 
   const handleSort = (field: SortField) => {
