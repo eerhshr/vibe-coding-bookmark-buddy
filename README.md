@@ -44,7 +44,10 @@ npm dev run
 
 <img width="1279" alt="Screenshot 2025-05-31 at 12 54 13 PM" src="https://github.com/user-attachments/assets/02863bac-929a-4108-8a49-d54bcda7bdc1" />
 
-<img width="1085" alt="Screenshot 2025-05-31 at 1 09 06 PM" src="https://github.com/user-attachments/assets/35c1b06c-3a8d-40e0-8046-97292c8af7fb" />
+<img width="1283" alt="Screenshot 2025-05-31 at 1 16 53 PM" src="https://github.com/user-attachments/assets/f8c3f4f2-62b9-440e-9978-a2ba31d79dd5" />
+
+<img width="959" alt="Screenshot 2025-05-31 at 1 15 41 PM" src="https://github.com/user-attachments/assets/1ff36708-83f1-4a05-bb19-27fb195c536c" />
+
 
 
 ---
