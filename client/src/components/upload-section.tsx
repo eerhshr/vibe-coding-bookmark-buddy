@@ -32,7 +32,16 @@ export default function UploadSection({ onUploadSuccess }: UploadSectionProps) {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await apiRequest('POST', '/api/bookmarks/upload', formData);
+      const response = await fetch('/api/bookmarks/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Upload failed');
+      }
+      
       const result = await response.json();
 
       setUploadedFile(file);
@@ -173,10 +182,8 @@ export default function UploadSection({ onUploadSuccess }: UploadSectionProps) {
               disabled={!uploadedFile || isUploading || isAnalyzing}
               className="flex-1 bg-green-600 hover:bg-green-700"
             >
-              {isAnalyzing ? (
+              {isAnalyzing && (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Upload className="w-4 h-4 mr-2" />
               )}
               Analyze Bookmarks
             </Button>
