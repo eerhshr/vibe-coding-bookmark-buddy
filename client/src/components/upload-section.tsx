@@ -113,8 +113,8 @@ export default function UploadSection({ onUploadSuccess }: UploadSectionProps) {
     <section id="upload" className="mb-12">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">Analyze Your Bookmarks</h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Upload your Chrome or Safari bookmark HTML file to get insights into your browsing habits and organize your digital life.
+        <p className="text-m text-gray-600 max-w-2xl mx-auto">
+          Upload your Chrome or Safari bookmark HTML file to get insights into your bookmarks.
         </p>
       </div>
 

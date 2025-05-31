@@ -168,10 +168,10 @@ export default function DashboardSection({ data }: DashboardSectionProps) {
         </Card>
       </div>
 
-      {/* Category Breakdown */}
+      {/* Category Breakdown
       <Card>
         <CardHeader>
-          <CardTitle>Category Breakdown - Click to View Bookmarks</CardTitle>
+          <CardTitle>Category Breakdown </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -201,7 +201,7 @@ export default function DashboardSection({ data }: DashboardSectionProps) {
             ))}
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
     </section>
   );
 }
