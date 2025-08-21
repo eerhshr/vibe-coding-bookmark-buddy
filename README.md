@@ -4,6 +4,16 @@
 
 A web-based application that allows users to upload their Chrome/Safari bookmark HTML files, parses them, and displays a clean, interactive dashboard to explore and manage bookmarks easily.
 
+## Notes
+
+* Hands-on exercise on using AI-Agent to build a web app from scratch
+* Developed this in ~2 hours using Replit and added additional fixes using GitHub Copilot
+* Focused on user simplicity and clean visualization
+* The core functionality (uploading a bookmark HTML file and visualizing its contents) is implemented
+* However, the current codebase is not production-ready and requires additional fixes
+* Manual debugging and rewrites were necessary showing that AI-generated code often still requires human intervention for correctness and edge-case handling.
+
+
 ## Features
 
 - Upload bookmarks via `.html` file exported from Chrome or Safari
@@ -29,16 +39,6 @@ cd bookmark-organizer
 npm install
 npm dev run
 ```
-
-## Notes
-
-* Hands-on exercise on using AI-Agent to build a web app from scratch
-* Developed this in ~2 hours using Replit and added additional fixes using GitHub Copilot
-* Focused on user simplicity and clean visualization
-* The core functionality (uploading a bookmark HTML file and visualizing its contents) is implemented
-* However, the current codebase is not production-ready and requires additional fixes
-* Manual debugging and rewrites were necessary showing that AI-generated code often still requires human intervention for correctness and edge-case handling.
-
 ---
 
 
